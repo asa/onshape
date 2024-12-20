@@ -183,6 +183,11 @@ class MateFeature(BaseModel):
 class MateGroupFeatureOccurrence(BaseModel):
     occurrence: list[str]
 
+    @property
+    def key(self) -> Key:
+        return tuple(self.occurrence)
+
+
 
 class MateGroupFeatureData(BaseModel):
     occurrences: list[MateGroupFeatureOccurrence]
@@ -194,6 +199,9 @@ class MateGroupFeature(BaseModel):
     suppressed: bool
     featureType: Literal["mateGroup"]
     featureData: MateGroupFeatureData
+
+    #def keys(self, root_key: Key = ()) -> list[Key]:
+    #    return [root_key + mated.occurance[0] for mated in self.featureData.occurrences]
 
 
 class MateConnectorFeatureData(BaseModel):
