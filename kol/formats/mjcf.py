@@ -7,7 +7,7 @@ https://github.com/google-deepmind/mujoco/blob/main/src/xml/xml_native_writer.cc
 
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
-from typing import Literal
+from typing_extensions import Literal
 
 
 @dataclass

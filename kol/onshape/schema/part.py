@@ -2,7 +2,7 @@
 """Defines the schema for parts APIs."""
 
 import functools
-from typing import Any
+from typing_extensions import Any
 
 import numpy as np
 from pydantic import BaseModel

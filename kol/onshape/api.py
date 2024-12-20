@@ -2,7 +2,8 @@
 
 import asyncio
 import logging
-from typing import Any, BinaryIO, Literal, Mapping
+import json
+from typing_extensions import Any, BinaryIO, Literal, Mapping
 
 from httpx import AsyncClient
 
@@ -112,12 +113,27 @@ class OnshapeApi:
                 "configuration": configuration,
             },
         )
-        return Assembly.model_validate(data)
+        try:
+            return Assembly.model_validate(data)
+        except Exception as e:
+            print("Raw data:")
+            print(json.dumps(data,indent=2))
+            print("Error:")
+            print(e)
+            raise e
 
     async def get_features(self, asm: RootAssembly | SubAssembly) -> Features:
         path = f"/api/assemblies/d/{asm.documentId}/m/{asm.documentMicroversion}/e/{asm.elementId}/features"
         data = await self._request("get", path)
-        return Features.model_validate(data)
+        try:
+            return Features.model_validate(data)
+        except Exception as e:
+            print("Raw data:")
+            print(json.dumps(data,indent=2))
+            print("Error:")
+            print(e)
+            raise e
+
 
     async def get_assembly_metadata(
         self,

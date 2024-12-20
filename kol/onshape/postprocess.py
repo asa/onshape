@@ -6,7 +6,7 @@ import sys
 import tarfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence
+from typing_extensions import Sequence
 
 from kol.onshape.config import ConverterConfig, PostprocessConfig
 from kol.onshape.download import download

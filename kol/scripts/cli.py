@@ -2,7 +2,7 @@
 
 import argparse
 import asyncio
-from typing import Literal, Sequence, get_args
+from typing_extensions import Literal, Sequence, get_args
 
 from kol.onshape.download import main as download_main
 from kol.onshape.postprocess import download_and_postprocess_main, postprocess_main

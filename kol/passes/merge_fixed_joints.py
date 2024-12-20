@@ -5,7 +5,7 @@ import logging
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal, get_args
+from typing_extensions import Any, Literal, get_args
 
 import numpy as np
 from scipy.spatial.transform import Rotation as R

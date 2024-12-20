@@ -1,10 +1,12 @@
 # requirements.txt
-
 asyncstdlib
+certifi
 httpx
 networkx
+idna
 numpy
-numpy-stl
+typing-extensions
+numpy_stl
 omegaconf
 pydantic
 scipy

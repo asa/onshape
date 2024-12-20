@@ -3,13 +3,14 @@
 
 import functools
 from enum import Enum
-from typing import Any, Literal
+from typing_extensions import Any, Literal
 
 from pydantic import BaseModel
 
 
 class FeatureType(str, Enum):
     mate = "mate"
+    mateConnector = "mateConnector"
     mateRelation = "mateRelation"
     relation = "replicate"
 

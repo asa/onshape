@@ -17,7 +17,7 @@ import sys
 from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Coroutine, Deque, Iterator, Literal, Sequence, TypeVar
+from typing_extensions import Any, Coroutine, Deque, Iterator, Literal, Sequence, TypeVar
 
 import networkx as nx
 import numpy as np
@@ -408,6 +408,7 @@ def get_joint_list(
     # Creates a topologically-sorted list of joints.
     joint_list: list[Joint] = []
     for joint_key, mate_feature in key_to_mate_feature.items():
+        print(joint_key, mate_feature)
         if mate_feature.suppressed:
             continue
 
@@ -1227,7 +1228,6 @@ async def save_urdf(
 
     for joint in doc.joints:
         joint_tf, _ = stl_origin_to_part_tfs[joint.parent]
-        urdf_joint = get_urdf_joint(doc, joint, joint_tf, config=config)
         urdf_link, stl_origin_to_part_tf, configuration = get_urdf_part(
             doc=doc,
             key=joint.child,
@@ -1236,6 +1236,11 @@ async def save_urdf(
             config=config,
         )
         stl_origin_to_part_tfs[joint.child] = (stl_origin_to_part_tf, configuration)
+        try:
+            urdf_joint = get_urdf_joint(doc, joint, joint_tf, config=config)
+        except Exception as e:
+            print("unable to find urdf joint for joint", joint)
+            continue
         urdf_parts.extend([urdf_joint, urdf_link])
 
     robot_name = clean_name(str(doc.assembly_metadata.property_map.get("Name", "robot"))).lower()

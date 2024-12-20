@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal, Self
+from typing_extensions import Literal, Self
 from xml.sax.saxutils import escape
 
 import numpy as np

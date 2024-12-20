@@ -3,7 +3,7 @@
 import datetime
 import logging
 from pathlib import Path
-from typing import Any, Callable, Coroutine, TypeVar
+from typing_extensions import Any, Callable, Coroutine, TypeVar
 
 logger = logging.getLogger(__name__)
 

@@ -5,7 +5,7 @@ import functools
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Literal
+from typing_extensions import Any, Literal
 
 import numpy as np
 from pydantic import BaseModel
@@ -117,6 +117,11 @@ class MatedCS(BaseModel):
         part_to_mate_tf[:3, 3] = self.origin
         return np.matrix(part_to_mate_tf)
 
+class MateConnectorCS(BaseModel):
+    xAxis: list[float]
+    yAxis: list[float]
+    zAxis: list[float]
+    origin: list[float]
 
 class MatedEntity(BaseModel):
     matedOccurrence: list[str]
@@ -191,6 +196,18 @@ class MateGroupFeature(BaseModel):
     featureData: MateGroupFeatureData
 
 
+class MateConnectorFeatureData(BaseModel):
+    mateConnectorCS: MateConnectorCS 
+    occurrence: list[str]
+    name: str
+
+class MateConnectorFeature(BaseModel):
+    id: str
+    suppressed: bool
+    featureType: Literal["mateConnector"]
+    featureData: MateConnectorFeatureData
+
+
 class Pattern(BaseModel):
     pass
 
@@ -199,7 +216,7 @@ class RootAssembly(BaseModel):
     occurrences: list[Occurrence]
     instances: list[Instance]
     patterns: list[Pattern]
-    features: list[MateGroupFeature | MateRelationFeature | MateFeature]
+    features: list[MateConnectorFeature | MateGroupFeature | MateRelationFeature | MateFeature]
     fullConfiguration: str
     configuration: str
     documentMicroversion: str
@@ -220,7 +237,7 @@ class RootAssembly(BaseModel):
 class SubAssembly(BaseModel):
     instances: list[Instance]
     patterns: list[Pattern]
-    features: list[MateGroupFeature | MateRelationFeature | MateFeature]
+    features: list[MateConnectorFeature | MateGroupFeature | MateRelationFeature | MateFeature]
     fullConfiguration: str
     configuration: str
     documentMicroversion: str

@@ -3,7 +3,7 @@
 import argparse
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Self, Sequence, cast
+from typing_extensions import Self, Sequence, cast
 
 from omegaconf import MISSING, OmegaConf
 from omegaconf.errors import ConfigKeyError

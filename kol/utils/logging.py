@@ -4,7 +4,7 @@ import datetime
 import logging
 import re
 import sys
-from typing import Literal
+from typing_extensions import Literal
 
 # Show as a transient message.
 LOG_PING: int = logging.INFO + 2

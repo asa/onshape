@@ -1,6 +1,6 @@
 """Defines utility functions used by the project."""
 
-from typing import Any, Coroutine, TypeVar
+from typing_extensions import Any, Coroutine, TypeVar
 
 T = TypeVar("T")
 

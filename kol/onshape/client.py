@@ -2,6 +2,7 @@
 
 import base64
 import datetime
+from datetime import timezone
 import hashlib
 import hmac
 import logging
@@ -13,7 +14,7 @@ import urllib.parse
 import webbrowser
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import Any, AsyncIterator, Literal, Mapping, cast
+from typing_extensions import Any, AsyncIterator, Literal, Mapping, cast
 
 from httpx import AsyncClient, Response
 
@@ -151,7 +152,7 @@ class OnshapeClient:
         Returns:
             Dictionary containing all headers
         """
-        date = datetime.datetime.now(datetime.UTC).strftime("%a, %d %b %Y %H:%M:%S GMT")
+        date = datetime.datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
         nonce = self._make_nonce()
         ctype = headers.get("Content-Type", "application/json")
         auth = self._make_auth(method, date, nonce, path, query=query, ctype=ctype)

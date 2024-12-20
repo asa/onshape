@@ -1,7 +1,7 @@
 """Tests mesh conversion options."""
 
 from pathlib import Path
-from typing import get_args
+from typing_extensions import get_args
 
 import pytest
 

@@ -4,7 +4,7 @@ import logging
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Self
+from typing_extensions import Self
 
 from kol.formats.common import save_xml
 

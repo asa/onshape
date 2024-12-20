@@ -2,7 +2,7 @@
 
 import asyncio
 import hashlib
-from typing import BinaryIO
+from typing_extensions import BinaryIO
 
 from kol.onshape.api import OnshapeApi
 from kol.onshape.cacher import Cacher

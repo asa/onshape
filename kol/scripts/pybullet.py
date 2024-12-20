@@ -6,7 +6,7 @@ import logging
 import math
 import time
 from pathlib import Path
-from typing import Dict, Sequence
+from typing_extensions import Dict, Sequence
 
 from kol.utils.logging import configure_logging
 

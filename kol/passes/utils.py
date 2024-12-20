@@ -2,7 +2,7 @@
 
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Iterator
+from typing_extensions import Iterator
 
 
 def iter_meshes(

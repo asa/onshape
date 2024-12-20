@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal, Union, cast, get_args
+from typing_extensions import Any, Literal, Union, cast, get_args
 
 import numpy as np
 import trimesh
