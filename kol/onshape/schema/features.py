@@ -12,6 +12,7 @@ class FeatureType(str, Enum):
     mate = "mate"
     mateConnector = "mateConnector"
     mateRelation = "mateRelation"
+    mateGroup = "mateGroup"
     relation = "replicate"
 
 

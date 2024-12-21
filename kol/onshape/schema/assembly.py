@@ -68,9 +68,27 @@ class PartInstance(BaseInstance):
             self.fullConfiguration,
         )
 
+#this is missing in the API. Mates can mate to the origin
+# but it has no id or part instance
+class AssemblyOriginInstance(BaseModel):
+    type: Literal["AssemblyOrigin"]
+    id: str
+    
+    @property
+    def name(self) -> str:
+        return self.type
+    @property
+    def suppressed(self) -> str:
+        return False
+    def __hash__(self):
+        return hash((self.type, self.type))
+    
+#    def __eq__(self, other):
+#        if not isinstance(other, AssemblyOriginInstance):
+#            return False
+#        return self.key == other.key
 
-Instance = AssemblyInstance | PartInstance | EmptyInstance
-
+Instance = AssemblyInstance | PartInstance | AssemblyOriginInstance | EmptyInstance
 
 class Occurrence(BaseModel):
     hidden: bool
@@ -124,7 +142,7 @@ class MateConnectorCS(BaseModel):
     origin: list[float]
 
 class MatedEntity(BaseModel):
-    matedOccurrence: list[str]
+    matedOccurrence: list[str | AssemblyOriginInstance]
     matedCS: MatedCS
 
     @property

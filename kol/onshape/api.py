@@ -114,6 +114,7 @@ class OnshapeApi:
             },
         )
         try:
+            #print(json.dumps(data,indent=2))
             return Assembly.model_validate(data)
         except Exception as e:
             print("Raw data:")
@@ -126,6 +127,8 @@ class OnshapeApi:
         path = f"/api/assemblies/d/{asm.documentId}/m/{asm.documentMicroversion}/e/{asm.elementId}/features"
         data = await self._request("get", path)
         try:
+            #print("Raw feature data:")
+            #print(json.dumps(data,indent=2))
             return Features.model_validate(data)
         except Exception as e:
             print("Raw data:")
@@ -167,6 +170,46 @@ class OnshapeApi:
             },
         )
         return PartDynamics.model_validate(data)
+
+    # TODO replace this with the async export API
+    async def download_obj(
+        self,
+        part: Part,
+        fp: BinaryIO,
+        *,
+        units: str = "meter",
+        min_facet_width: float | None = None,
+        max_facet_width: float | None = None,
+    ) -> None:
+        path = (
+            f"/api/parts/d/{part.documentId}/m/{part.documentMicroversion}"
+            f"/e/{part.elementId}/partid/{escape_url(part.partId)}/obj"
+        )
+        query = {
+            "mode": "binary",
+            "grouping": True,
+            "units": units,
+            "configuration": part.configuration,
+        }
+        #if min_facet_width is not None:
+        #    query["minFacetWidth"] = min_facet_width
+        #if max_facet_width is not None:
+        #    query["maxFacetWidth"] = max_facet_width
+
+        async with self.semaphore:
+            async with self.client.request(
+                "get",
+                path,
+                query=query,
+                headers={"Accept": "*/*"},
+            ) as response:
+                data = await response.aread()
+                response.raise_for_status()
+                fp.write(data)
+
+        if self.post_wait > 0.0:
+            await asyncio.sleep(self.post_wait)
+
 
     async def download_stl(
         self,
