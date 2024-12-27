@@ -8,7 +8,7 @@ from enum import Enum
 from typing_extensions import Any, Literal
 
 import numpy as np
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 
 from kol.onshape.schema.common import ElementUid
 
@@ -70,23 +70,24 @@ class PartInstance(BaseInstance):
 
 #this is missing in the API. Mates can mate to the origin
 # but it has no id or part instance
-class AssemblyOriginInstance(BaseModel):
-    type: Literal["AssemblyOrigin"]
-    id: str
-    
-    @property
-    def name(self) -> str:
-        return self.type
-    @property
-    def suppressed(self) -> str:
-        return False
+class AssemblyOriginInstance(BaseInstance):
+    type: Literal["AssemblyOrigin"] = "AssemblyOrigin"
+    name:str = "AssemblyOrigin"
+    id:str = "AssemblyOrigin"
+    suppressed: bool = False
+
     def __hash__(self):
-        return hash((self.type, self.type))
+        return hash(self.euid)
     
-#    def __eq__(self, other):
-#        if not isinstance(other, AssemblyOriginInstance):
-#            return False
-#        return self.key == other.key
+    @property
+    def euid(self) -> ElementUid:
+        return ElementUid(
+            self.documentId,
+            self.documentMicroversion,
+            self.elementId,
+            "AssemblyOrigin", # this is id
+            self.fullConfiguration,
+        )
 
 Instance = AssemblyInstance | PartInstance | AssemblyOriginInstance | EmptyInstance
 
@@ -205,8 +206,6 @@ class MateGroupFeatureOccurrence(BaseModel):
     def key(self) -> Key:
         return tuple(self.occurrence)
 
-
-
 class MateGroupFeatureData(BaseModel):
     occurrences: list[MateGroupFeatureOccurrence]
     name: str
@@ -218,8 +217,8 @@ class MateGroupFeature(BaseModel):
     featureType: Literal["mateGroup"]
     featureData: MateGroupFeatureData
 
-    #def keys(self, root_key: Key = ()) -> list[Key]:
-    #    return [root_key + mated.occurance[0] for mated in self.featureData.occurrences]
+    def keys(self, root_key: Key = ()) -> list[Key]:
+        return [root_key + mated.key for mated in self.featureData.occurrences]
 
 
 class MateConnectorFeatureData(BaseModel):
@@ -327,9 +326,28 @@ class Part(BaseModel):
 class PartStudioFeature(BaseModel):
     pass
 
+#this is missing in the API. Mates can mate to the origin
+# but it has no id or part instance
+class AssemblyOrigin(BaseModel):
+    type: Literal["AssemblyOrigin"] = "AssemblyOrigin"
+    name: str = "AssemblyOrigin"
+
+    def __hash__(self):
+        return hash(self.euid)
+    
+    @property
+    def euid(self) -> ElementUid:
+        return ElementUid(
+            self.documentId,
+            self.documentMicroversion,
+            self.elementId,
+            "AssemblyOrigin", # this is id
+            self.fullConfiguration,
+        )
+
 
 class Assembly(BaseModel):
     rootAssembly: RootAssembly
     subAssemblies: list[SubAssembly]
-    parts: list[Part]
+    parts: list[Part | AssemblyOrigin]
     partStudioFeatures: list[PartStudioFeature]
