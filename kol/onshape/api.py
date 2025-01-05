@@ -114,7 +114,7 @@ class OnshapeApi:
             },
         )
         try:
-            #print(json.dumps(data,indent=2))
+            print(json.dumps(data,indent=2))
             return Assembly.model_validate(data)
         except Exception as e:
             print("Raw data:")
@@ -145,6 +145,7 @@ class OnshapeApi:
     ) -> AssemblyMetadata:
         path = f"/api/metadata/d/{assembly.documentId}/m/{assembly.documentMicroversion}/e/{assembly.elementId}"
         data = await self._request("get", path, query={"configuration": configuration})
+        print(json.dumps(data,indent=2))
         return AssemblyMetadata.model_validate(data)
 
     async def get_part_metadata(self, part: Part) -> PartMetadata:

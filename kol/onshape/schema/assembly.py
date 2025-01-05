@@ -8,7 +8,7 @@ from enum import Enum
 from typing_extensions import Any, Literal
 
 import numpy as np
-from pydantic import BaseModel, computed_field
+from pydantic import BaseModel
 
 from kol.onshape.schema.common import ElementUid
 
@@ -68,28 +68,7 @@ class PartInstance(BaseInstance):
             self.fullConfiguration,
         )
 
-#this is missing in the API. Mates can mate to the origin
-# but it has no id or part instance
-class AssemblyOriginInstance(BaseInstance):
-    type: Literal["AssemblyOrigin"] = "AssemblyOrigin"
-    name:str = "AssemblyOrigin"
-    id:str = "AssemblyOrigin"
-    suppressed: bool = False
-
-    def __hash__(self):
-        return hash(self.euid)
-    
-    @property
-    def euid(self) -> ElementUid:
-        return ElementUid(
-            self.documentId,
-            self.documentMicroversion,
-            self.elementId,
-            "AssemblyOrigin", # this is id
-            self.fullConfiguration,
-        )
-
-Instance = AssemblyInstance | PartInstance | AssemblyOriginInstance | EmptyInstance
+Instance = AssemblyInstance | PartInstance  | EmptyInstance
 
 class Occurrence(BaseModel):
     hidden: bool
@@ -143,7 +122,7 @@ class MateConnectorCS(BaseModel):
     origin: list[float]
 
 class MatedEntity(BaseModel):
-    matedOccurrence: list[str | AssemblyOriginInstance]
+    matedOccurrence: list[str | AssemblyInstance]
     matedCS: MatedCS
 
     @property
@@ -326,28 +305,8 @@ class Part(BaseModel):
 class PartStudioFeature(BaseModel):
     pass
 
-#this is missing in the API. Mates can mate to the origin
-# but it has no id or part instance
-class AssemblyOrigin(BaseModel):
-    type: Literal["AssemblyOrigin"] = "AssemblyOrigin"
-    name: str = "AssemblyOrigin"
-
-    def __hash__(self):
-        return hash(self.euid)
-    
-    @property
-    def euid(self) -> ElementUid:
-        return ElementUid(
-            self.documentId,
-            self.documentMicroversion,
-            self.elementId,
-            "AssemblyOrigin", # this is id
-            self.fullConfiguration,
-        )
-
-
 class Assembly(BaseModel):
     rootAssembly: RootAssembly
     subAssemblies: list[SubAssembly]
-    parts: list[Part | AssemblyOrigin]
+    parts: list[Part]
     partStudioFeatures: list[PartStudioFeature]
